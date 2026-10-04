@@ -1,0 +1,459 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    min-height: 100vh;
+
+    font-family:
+        Arial,
+        sans-serif;
+
+    color: white;
+
+    background:
+        radial-gradient(
+            circle at top,
+            #1d2850,
+            #080b16 55%
+        );
+
+    padding: 30px 15px;
+}
+
+.background {
+    position: fixed;
+    inset: 0;
+
+    pointer-events: none;
+
+    background:
+        linear-gradient(
+            135deg,
+            transparent 40%,
+            rgba(0, 255, 255, 0.03)
+        );
+}
+
+.container {
+    position: relative;
+
+    width: 100%;
+    max-width: 1100px;
+
+    margin: auto;
+}
+
+header {
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+header h1 {
+    font-size: 48px;
+    letter-spacing: 5px;
+
+    text-shadow:
+        0 0 10px #00ffff,
+        0 0 30px #00ffff;
+}
+
+header p {
+    margin-top: 8px;
+    color: #9da9c9;
+}
+
+
+.panel {
+    width: 100%;
+    max-width: 500px;
+
+    margin: 20px auto;
+
+    padding: 25px;
+
+    border-radius: 20px;
+
+    background:
+        rgba(15, 20, 40, 0.9);
+
+    border: 1px solid
+        rgba(0, 255, 255, 0.25);
+
+    box-shadow:
+        0 0 30px
+        rgba(0, 255, 255, 0.08);
+}
+
+.panel h2 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+
+input {
+    width: 100%;
+
+    padding: 14px;
+
+    margin-bottom: 12px;
+
+    border-radius: 10px;
+
+    border: 1px solid #344266;
+
+    outline: none;
+
+    background: #0b1022;
+
+    color: white;
+
+    font-size: 16px;
+}
+
+input:focus {
+    border-color: #00ffff;
+
+    box-shadow:
+        0 0 10px
+        rgba(0, 255, 255, 0.2);
+}
+
+
+button {
+    width: 100%;
+
+    padding: 14px;
+
+    margin-top: 8px;
+
+    border: none;
+
+    border-radius: 10px;
+
+    cursor: pointer;
+
+    font-size: 16px;
+    font-weight: bold;
+
+    color: #001014;
+
+    background:
+        linear-gradient(
+            90deg,
+            #00ffff,
+            #00ffa2
+        );
+
+    transition: 0.2s;
+}
+
+button:hover {
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 0 20px
+        rgba(0, 255, 255, 0.35);
+}
+
+button:disabled {
+    cursor: not-allowed;
+
+    opacity: 0.4;
+
+    transform: none;
+
+    box-shadow: none;
+}
+
+button.secondary {
+    color: white;
+
+    background:
+        #202942;
+}
+
+.separator {
+    text-align: center;
+
+    color: #697596;
+
+    margin: 15px 0;
+}
+
+.error {
+    color: #ff5577;
+
+    text-align: center;
+
+    min-height: 20px;
+
+    margin-top: 12px;
+}
+
+
+.hidden {
+    display: none !important;
+}
+
+
+.players {
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 15px;
+
+    margin: 20px 0;
+}
+
+.playerCard {
+    flex: 1;
+
+    padding: 15px;
+
+    text-align: center;
+
+    border-radius: 12px;
+
+    background: #11182e;
+
+    border: 1px solid #293655;
+}
+
+.playerCard span {
+    display: block;
+
+    color: #8290b5;
+
+    font-size: 13px;
+
+    margin-bottom: 6px;
+}
+
+.playerCard strong {
+    display: block;
+
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+}
+
+.vs {
+    font-size: 20px;
+
+    font-weight: bold;
+
+    color: #00ffff;
+}
+
+
+.gameStatus {
+    text-align: center;
+
+    margin-bottom: 15px;
+
+    color: #7cffbc;
+}
+
+
+.boards {
+    display: flex;
+
+    justify-content: center;
+
+    align-items: flex-start;
+
+    gap: 35px;
+
+    flex-wrap: wrap;
+}
+
+.gameColumn {
+    text-align: center;
+}
+
+.gameColumn h2 {
+    margin-bottom: 10px;
+
+    font-size: 20px;
+}
+
+
+.boardWrapper {
+    padding: 5px;
+
+    background: #050812;
+
+    border: 2px solid #263454;
+
+    border-radius: 10px;
+
+    box-shadow:
+        0 0 25px
+        rgba(0, 255, 255, 0.08);
+}
+
+canvas {
+    display: block;
+
+    width: 300px;
+    height: 600px;
+
+    background: #050812;
+}
+
+
+.stats {
+    display: flex;
+
+    justify-content: center;
+
+    gap: 8px;
+
+    margin-top: 12px;
+}
+
+.stats div {
+    min-width: 80px;
+
+    padding: 8px;
+
+    border-radius: 8px;
+
+    background: #11182e;
+}
+
+.stats span {
+    display: block;
+
+    color: #7c88aa;
+
+    font-size: 11px;
+}
+
+.stats strong {
+    display: block;
+
+    margin-top: 3px;
+}
+
+
+.controls {
+    text-align: center;
+
+    margin: 25px 0;
+
+    color: #7f8bab;
+
+    line-height: 1.7;
+}
+
+
+.recordsPanel {
+    max-width: 800px;
+
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+
+    border-collapse: collapse;
+}
+
+th,
+td {
+    padding: 12px 8px;
+
+    text-align: center;
+
+    border-bottom:
+        1px solid #29334d;
+}
+
+th {
+    color: #00ffff;
+}
+
+td {
+    color: #dbe2f7;
+}
+
+
+.modal {
+    position: fixed;
+
+    inset: 0;
+
+    z-index: 100;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    padding: 20px;
+
+    background:
+        rgba(0, 0, 0, 0.75);
+}
+
+.modalBox {
+    width: 100%;
+    max-width: 420px;
+
+    padding: 30px;
+
+    text-align: center;
+
+    border-radius: 20px;
+
+    background: #10162b;
+
+    border: 1px solid #00ffff;
+
+    box-shadow:
+        0 0 40px
+        rgba(0, 255, 255, 0.2);
+}
+
+.modalBox h2 {
+    margin-bottom: 15px;
+}
+
+.modalBox p {
+    color: #9ba7c7;
+
+    margin-bottom: 15px;
+}
+
+
+@media (max-width: 700px) {
+
+    body {
+        padding: 15px 8px;
+    }
+
+    header h1 {
+        font-size: 35px;
+    }
+
+    .boards {
+        gap: 20px;
+    }
+
+    canvas {
+        width: 270px;
+        height: 540px;
+    }
+
+    .boards .boardWrapper {
+        transform: scale(0.9);
+        transform-origin: top center;
+        margin-bottom: -50px;
+    }
+}

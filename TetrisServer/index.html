@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="uk">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Tetris Multiplayer</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <div class="background"></div>
+
+    <main class="container">
+
+        <header>
+            <h1>🎮 TETRIS</h1>
+            <p>Мультиплеєр 1 VS 1</p>
+        </header>
+
+
+        <!-- ЛОБІ -->
+
+        <section id="lobby" class="panel">
+
+            <h2>Грати онлайн</h2>
+
+            <input
+                id="playerName"
+                type="text"
+                placeholder="Твоє ім'я"
+                maxlength="20"
+            >
+
+            <button id="createBtn">
+                🏠 Створити кімнату
+            </button>
+
+
+            <div class="separator">
+                АБО
+            </div>
+
+
+            <input
+                id="roomCode"
+                type="text"
+                placeholder="Код кімнати"
+                maxlength="4"
+            >
+
+            <button id="joinBtn">
+                🚪 Приєднатися
+            </button>
+
+
+            <p id="errorText" class="error"></p>
+
+        </section>
+
+
+        <!-- КІМНАТА -->
+
+        <section id="roomPanel" class="panel hidden">
+
+            <h2>
+                Кімната:
+                <span id="roomCodeDisplay">----</span>
+            </h2>
+
+            <p id="roomStatus">
+                Очікуємо другого гравця...
+            </p>
+
+            <div class="players">
+
+                <div class="playerCard">
+                    <span>👤 Ти</span>
+                    <strong id="myName">---</strong>
+                </div>
+
+                <div class="vs">
+                    VS
+                </div>
+
+                <div class="playerCard">
+                    <span>👤 Суперник</span>
+                    <strong id="opponentName">Очікування...</strong>
+                </div>
+
+            </div>
+
+
+            <button id="startBtn" disabled>
+                ▶ Почати гру
+            </button>
+
+            <button id="leaveBtn" class="secondary">
+                ← Вийти
+            </button>
+
+        </section>
+
+
+        <!-- ГРА -->
+
+        <section id="gamePanel" class="hidden">
+
+            <div class="gameStatus">
+                <span id="connectionStatus">
+                    🟢 Підключено
+                </span>
+            </div>
+
+
+            <div class="boards">
+
+                <!-- МОЄ ПОЛЕ -->
+
+                <div class="gameColumn">
+
+                    <h2 id="myPlayerTitle">
+                        Ти
+                    </h2>
+
+                    <div class="boardWrapper">
+
+                        <canvas
+                            id="gameCanvas"
+                            width="300"
+                            height="600"
+                        ></canvas>
+
+                    </div>
+
+
+                    <div class="stats">
+
+                        <div>
+                            <span>Очки</span>
+                            <strong id="score">
+                                0
+                            </strong>
+                        </div>
+
+                        <div>
+                            <span>Лінії</span>
+                            <strong id="lines">
+                                0
+                            </strong>
+                        </div>
+
+                        <div>
+                            <span>Рівень</span>
+                            <strong id="level">
+                                1
+                            </strong>
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- СУПЕРНИК -->
+
+                <div class="gameColumn">
+
+                    <h2 id="opponentTitle">
+                        Суперник
+                    </h2>
+
+                    <div class="boardWrapper">
+
+                        <canvas
+                            id="opponentCanvas"
+                            width="300"
+                            height="600"
+                        ></canvas>
+
+                    </div>
+
+
+                    <div class="stats">
+
+                        <div>
+                            <span>Очки</span>
+                            <strong id="opponentScore">
+                                0
+                            </strong>
+                        </div>
+
+                        <div>
+                            <span>Лінії</span>
+                            <strong id="opponentLines">
+                                0
+                            </strong>
+                        </div>
+
+                        <div>
+                            <span>Рівень</span>
+                            <strong id="opponentLevel">
+                                1
+                            </strong>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="controls">
+
+                <p>
+                    ← → Рух
+                    <br>
+                    ↑ Обертання
+                    <br>
+                    ↓ Прискорення
+                    <br>
+                    SPACE — падіння
+                    <br>
+                    P — пауза
+                </p>
+
+            </div>
+
+        </section>
+
+
+        <!-- ТАБЛИЦЯ РЕКОРДІВ -->
+
+        <section class="panel recordsPanel">
+
+            <h2>🏆 Таблиця рекордів</h2>
+
+            <table>
+
+                <thead>
+
+                    <tr>
+                        <th>#</th>
+                        <th>Гравець</th>
+                        <th>Очки</th>
+                        <th>Рівень</th>
+                        <th>Лінії</th>
+                    </tr>
+
+                </thead>
+
+                <tbody id="recordsBody">
+
+                    <tr>
+                        <td colspan="5">
+                            Завантаження...
+                        </td>
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </section>
+
+    </main>
+
+
+    <!-- GAME OVER -->
+
+    <div
+        id="gameOver"
+        class="modal hidden"
+    >
+
+        <div class="modalBox">
+
+            <h2 id="gameOverTitle">
+                Гру завершено
+            </h2>
+
+            <p id="gameOverText"></p>
+
+            <button id="restartBtn">
+                🔄 Грати ще раз
+            </button>
+
+            <button id="backBtn" class="secondary">
+                🏠 В меню
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <script src="https://cdn.socket.io/4.8.1/socket.io.min.js"></script>
+    <script src="game.js"></script>
+
+</body>
+
+</html>

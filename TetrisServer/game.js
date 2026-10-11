@@ -294,6 +294,7 @@ joinBtn.onclick = () => {
 if (soloBtn) {
     soloBtn.addEventListener("click", () => {
         gameMode = "solo";
+        document.body.classList.add("solo-mode");
         roomCode = "";
 
         playerName = playerNameInput.value.trim() || "Гравець";

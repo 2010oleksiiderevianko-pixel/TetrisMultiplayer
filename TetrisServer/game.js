@@ -269,6 +269,22 @@ createBtn.onclick = () => {
 };
 
 gameMode = "multiplayer";
+document.body.classList.remove("solo-mode");
+
+const opponentCanvas = document.getElementById("opponentCanvas");
+
+if (opponentCanvas) {
+    let opponentColumn = opponentCanvas;
+
+    while (
+        opponentColumn.parentElement &&
+        !opponentColumn.classList.contains("gameColumn")
+    ) {
+        opponentColumn = opponentColumn.parentElement;
+    }
+
+    opponentColumn.style.display = "";
+}
 
 joinBtn.onclick = () => {
 

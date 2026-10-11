@@ -265,6 +265,7 @@ createBtn.onclick = () => {
     );
 };
 
+gameMode = "multiplayer";
 
 joinBtn.onclick = () => {
 

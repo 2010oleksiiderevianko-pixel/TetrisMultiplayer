@@ -1429,17 +1429,19 @@ function closeGameOver() {
 // РЕСТАРТ
 // =========================
 
-restartBtn.onclick = () => {
 
+restartBtn.onclick = () => {
     closeGameOver();
 
-    socket.emit(
-        "restart_match",
-        {
+    if (gameMode === "solo") {
+        startGame();
+    } else {
+        socket.emit("restart_match", {
             room: roomCode
-        }
-    );
+        });
+    }
 };
+
 
 
 socket.on(

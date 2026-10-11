@@ -130,11 +130,11 @@ const roomInput =
 const createBtn =
     document.getElementById("createBtn");
 
-const soloBtn = document.getElementById("soloBtn");
 let gameMode = "multiplayer";
 
 const joinBtn =
     document.getElementById("joinBtn");
+const soloBtn = document.getElementById("soloBtn");
 
 const startBtn =
     document.getElementById("startBtn");
@@ -432,6 +432,21 @@ socket.on(
 // =========================
 // СТАРТ
 // =========================
+
+if (soloBtn) {
+    soloBtn.onclick = function () {
+        gameMode = "solo";
+        roomCode = "";
+        playerName = playerNameInput.value.trim() || "Гравець";
+
+        lobby.classList.add("hidden");
+        roomPanel.classList.add("hidden");
+        gamePanel.classList.remove("hidden");
+
+        startGame();
+    };
+}
+
 
 startBtn.onclick = () => {
 

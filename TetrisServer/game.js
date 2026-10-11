@@ -290,6 +290,23 @@ const soloBtn = document.getElementById("soloBtn");
 let gameMode = "multiplayer";
 
 
+if (soloBtn) {
+    soloBtn.addEventListener("click", () => {
+        gameMode = "solo";
+        roomCode = "";
+
+        playerName = playerNameInput.value.trim() || "Гравець";
+
+        lobby.classList.add("hidden");
+        roomPanel.classList.add("hidden");
+        gamePanel.classList.remove("hidden");
+
+        startGame();
+    });
+}
+
+
+
     socket.emit(
         "join_room_game",
         {

@@ -295,6 +295,21 @@ if (soloBtn) {
     soloBtn.addEventListener("click", () => {
         gameMode = "solo";
         document.body.classList.add("solo-mode");
+
+const opponentCanvas = document.getElementById("opponentCanvas");
+
+if (opponentCanvas) {
+    let opponentColumn = opponentCanvas;
+
+    while (
+        opponentColumn.parentElement &&
+        !opponentColumn.classList.contains("gameColumn")
+    ) {
+        opponentColumn = opponentColumn.parentElement;
+    }
+
+    opponentColumn.style.display = "none";
+}
         roomCode = "";
 
         playerName = playerNameInput.value.trim() || "Гравець";
@@ -437,7 +452,22 @@ socket.on(
 if (soloBtn) {
     soloBtn.onclick = function () {
         gameMode = "solo";
-        document.body.classList.remove("solo-mode");
+        document.body.classList.add("solo-mode");
+
+const opponentCanvas = document.getElementById("opponentCanvas");
+
+if (opponentCanvas) {
+    let opponentColumn = opponentCanvas;
+
+    while (
+        opponentColumn.parentElement &&
+        !opponentColumn.classList.contains("gameColumn")
+    ) {
+        opponentColumn = opponentColumn.parentElement;
+    }
+
+    opponentColumn.style.display = "none";
+}
         roomCode = "";
         playerName = playerNameInput.value.trim() || "Гравець";
 

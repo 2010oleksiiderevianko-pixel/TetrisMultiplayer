@@ -1,4 +1,3 @@
-
 const socket = io();
 
 // =========================
@@ -16,28 +15,28 @@ const opponentCanvas = document.getElementById("opponentCanvas");
 const opponentCtx = opponentCanvas.getContext("2d");
 
 // =========================
-// СТАН ГРИ
+// СТАН
 // =========================
 
 let playerName = "";
 let roomCode = "";
-let gameMode = "multiplayer";
 
 let gameRunning = false;
 let paused = false;
 
 let board = [];
-let opponentBoard = [];
-
 let score = 0;
 let lines = 0;
 let level = 1;
 
+let opponentBoard = [];
 let currentPiece = null;
 
 let dropCounter = 0;
 let lastTime = 0;
 let dropInterval = 800;
+
+let gameMode = "multiplayer";
 
 // =========================
 // ФІГУРИ
@@ -54,7 +53,7 @@ const pieces = [
 ];
 
 // =========================
-// DOM-ЕЛЕМЕНТИ
+// DOM
 // =========================
 
 const lobby = document.getElementById("lobby");
@@ -67,9 +66,9 @@ const roomInput = document.getElementById("roomCode");
 const createBtn = document.getElementById("createBtn");
 const joinBtn = document.getElementById("joinBtn");
 const soloBtn = document.getElementById("soloBtn");
+
 const startBtn = document.getElementById("startBtn");
 const leaveBtn = document.getElementById("leaveBtn");
-
 const restartBtn = document.getElementById("restartBtn");
 const backBtn = document.getElementById("backBtn");
 
@@ -114,8 +113,6 @@ function randomPiece() {
 }
 
 function showError(message) {
-    if (!errorText) return;
-
     errorText.textContent = message;
 
     setTimeout(() => {
@@ -124,26 +121,29 @@ function showError(message) {
 }
 
 // =========================
-// ПОКАЗ / ПРИХОВУВАННЯ СУПЕРНИКА
+// ВІДОБРАЖЕННЯ СУПЕРНИКА
 // =========================
 
 function setOpponentVisible(visible) {
     document.body.classList.toggle("solo-mode", !visible);
 
-    if (!opponentCanvas) return;
+    const element = document.getElementById("opponentCanvas");
+    if (!element) return;
 
-    // Знаходимо колонку, яка містить поле суперника.
-    let column = opponentCanvas.closest(".gameColumn");
+    let column = element.closest(".gameColumn");
 
-    // Запасний варіант, якщо в HTML немає .gameColumn.
     if (!column) {
-        column = opponentCanvas.parentElement;
+        column = element.parentElement;
 
         while (
             column &&
             column.parentElement &&
-            !column.classList.contains("boards")
+            column.parentElement !== document.body
         ) {
+            if (column.classList && column.classList.contains("boards")) {
+                break;
+            }
+
             column = column.parentElement;
         }
     }
@@ -163,14 +163,8 @@ createBtn.onclick = () => {
 
     playerName = playerNameInput.value.trim() || "Гравець";
 
-    socket.emit("create_room", {
-        name: playerName
-    });
+    socket.emit("create_room", { name: playerName });
 };
-
-// =========================
-// ПРИЄДНАННЯ ДО КІМНАТИ
-// =========================
 
 joinBtn.onclick = () => {
     gameMode = "multiplayer";
@@ -190,15 +184,10 @@ joinBtn.onclick = () => {
     });
 };
 
-// =========================
-// СОЛО
-// =========================
-
 if (soloBtn) {
     soloBtn.onclick = () => {
         gameMode = "solo";
         roomCode = "";
-
         playerName = playerNameInput.value.trim() || "Гравець";
 
         setOpponentVisible(false);
@@ -210,10 +199,6 @@ if (soloBtn) {
         startGame();
     };
 }
-
-// =========================
-// ПОДІЇ КІМНАТИ
-// =========================
 
 socket.on("room_created", data => {
     roomCode = data.room;
@@ -231,6 +216,16 @@ function openRoom() {
 
     roomCodeDisplay.textContent = roomCode;
     myNameText.textContent = playerName;
+
+    updateRoomButtons();
+}
+
+function updateRoomButtons() {
+    const cards = document.querySelectorAll(".playerCard");
+
+    if (cards.length) {
+        // Залишаємо інтерфейс стабільним.
+    }
 }
 
 socket.on("room_update", data => {
@@ -264,12 +259,7 @@ socket.on("error_message", data => {
 // =========================
 
 startBtn.onclick = () => {
-    gameMode = "multiplayer";
-    setOpponentVisible(true);
-
-    socket.emit("start_match", {
-        room: roomCode
-    });
+    socket.emit("start_match", { room: roomCode });
 };
 
 socket.on("match_started", () => {
@@ -283,7 +273,7 @@ socket.on("match_started", () => {
 });
 
 // =========================
-// ПОЧАТОК ГРИ
+// ГРА
 // =========================
 
 function startGame() {
@@ -304,19 +294,13 @@ function startGame() {
     updateStats();
     closeGameOver();
     draw();
-    drawOpponent();
 
     lastTime = performance.now();
 
     requestAnimationFrame(gameLoop);
 
-    // У соло roomCode порожній, тому стан не надсилається.
     sendGameState();
 }
-
-// =========================
-// ІГРОВИЙ ЦИКЛ
-// =========================
 
 function gameLoop(time = 0) {
     if (!gameRunning) return;
@@ -339,7 +323,7 @@ function gameLoop(time = 0) {
 }
 
 // =========================
-// ПЕРЕВІРКА ЗІТКНЕНЬ
+// ЗІТКНЕННЯ
 // =========================
 
 function collision(piece, testBoard = board) {
@@ -372,7 +356,7 @@ function collision(piece, testBoard = board) {
 }
 
 // =========================
-// РУХ ЛІВОРУЧ
+// РУХ ФІГУР
 // =========================
 
 function moveLeft() {
@@ -387,10 +371,6 @@ function moveLeft() {
     draw();
 }
 
-// =========================
-// РУХ ПРАВОРУЧ
-// =========================
-
 function moveRight() {
     if (!gameRunning || paused || !currentPiece) return;
 
@@ -402,10 +382,6 @@ function moveRight() {
 
     draw();
 }
-
-// =========================
-// РУХ УНИЗ
-// =========================
 
 function moveDown() {
     if (!gameRunning || paused || !currentPiece) return;
@@ -420,7 +396,6 @@ function moveDown() {
 
         currentPiece = randomPiece();
 
-        // Програш, якщо нова фігура не може з'явитися.
         if (
             collision(currentPiece) ||
             board.slice(0, 3).some(row => row.some(cell => cell))
@@ -436,10 +411,6 @@ function moveDown() {
     draw();
 }
 
-// =========================
-// МИТТЄВЕ ПАДІННЯ
-// =========================
-
 function hardDrop() {
     if (!gameRunning || paused || !currentPiece) return;
 
@@ -454,10 +425,7 @@ function hardDrop() {
 
     currentPiece = randomPiece();
 
-    if (
-        collision(currentPiece) ||
-        board.slice(0, 3).some(row => row.some(cell => cell))
-    ) {
+    if (collision(currentPiece)) {
         loseGame();
         return;
     }
@@ -467,7 +435,7 @@ function hardDrop() {
 }
 
 // =========================
-// ОБЕРТАННЯ ФІГУРИ
+// ОБЕРТАННЯ
 // =========================
 
 function rotatePiece() {
@@ -498,7 +466,7 @@ function rotatePiece() {
 }
 
 // =========================
-// РОЗМІЩЕННЯ БЛОКІВ
+// ЗЛИТТЯ ФІГУРИ З ПОЛЕМ
 // =========================
 
 function merge() {
@@ -523,14 +491,13 @@ function merge() {
         });
     });
 
-    // 10 очок за кожен розміщений блок.
     score += blocksPlaced * 10;
 
     updateStats();
 }
 
 // =========================
-// ОЧИЩЕННЯ РЯДКІВ
+// ОЧИЩЕННЯ ЛІНІЙ
 // =========================
 
 function clearLines() {
@@ -552,7 +519,7 @@ function clearLines() {
     if (cleared > 0) {
         const points = [0, 100, 300, 500, 800];
 
-        score += (points[cleared] || 0) * level;
+        score += (points[cleared] || 800) * level;
         lines += cleared;
 
         level = Math.floor(lines / 10) + 1;
@@ -571,15 +538,10 @@ function clearLines() {
 // =========================
 
 function loseGame() {
-    if (!gameRunning) return;
-
     gameRunning = false;
 
-    // Повідомляємо сервер про програш лише в мультиплеєрі.
     if (gameMode === "multiplayer" && roomCode) {
-        socket.emit("player_lost", {
-            room: roomCode
-        });
+        socket.emit("player_lost", { room: roomCode });
     }
 
     saveRecord();
@@ -591,7 +553,7 @@ function loseGame() {
 }
 
 // =========================
-// ПЕРЕМОГА В МУЛЬТИПЛЕЄРІ
+// ПЕРЕМОГА
 // =========================
 
 socket.on("opponent_won", () => {
@@ -612,8 +574,6 @@ socket.on("opponent_won", () => {
 // =========================
 
 socket.on("opponent_state", data => {
-    if (gameMode !== "multiplayer") return;
-
     opponentBoard = data.board || [];
 
     opponentScoreText.textContent = data.score || 0;
@@ -634,7 +594,7 @@ function updateStats() {
 }
 
 // =========================
-// МАЛЮВАННЯ ПОЛЯ
+// МАЛЮВАННЯ
 // =========================
 
 function drawBoard(context, targetBoard) {
@@ -646,7 +606,6 @@ function drawBoard(context, targetBoard) {
     context.strokeStyle = "rgba(255,255,255,0.05)";
     context.lineWidth = 1;
 
-    // Вертикальна сітка.
     for (let x = 0; x <= COLS; x++) {
         context.beginPath();
         context.moveTo(x * BLOCK, 0);
@@ -654,7 +613,6 @@ function drawBoard(context, targetBoard) {
         context.stroke();
     }
 
-    // Горизонтальна сітка.
     for (let y = 0; y <= ROWS; y++) {
         context.beginPath();
         context.moveTo(0, y * BLOCK);
@@ -662,7 +620,6 @@ function drawBoard(context, targetBoard) {
         context.stroke();
     }
 
-    // Уже розміщені блоки.
     for (let y = 0; y < ROWS; y++) {
         for (let x = 0; x < COLS; x++) {
             if (targetBoard[y] && targetBoard[y][x]) {
@@ -671,10 +628,6 @@ function drawBoard(context, targetBoard) {
         }
     }
 }
-
-// =========================
-// МАЛЮВАННЯ ОДНОГО БЛОКА
-// =========================
 
 function drawBlock(context, x, y, color) {
     context.fillStyle = color;
@@ -696,10 +649,6 @@ function drawBlock(context, x, y, color) {
     );
 }
 
-// =========================
-// МАЛЮВАННЯ ПОТОЧНОЇ ФІГУРИ
-// =========================
-
 function drawPiece() {
     if (!currentPiece) return;
 
@@ -717,18 +666,14 @@ function drawPiece() {
     });
 }
 
-// =========================
-// МАЛЮВАННЯ ГРИ ТА ЧЕРВОНОЇ ЛІНІЇ
-// =========================
-
 function draw() {
     drawBoard(ctx, board);
     drawPiece();
 
-    // Червона лінія — межа, за якою видно небезпечну зону.
     const endLineY = 3 * BLOCK;
 
     ctx.save();
+
     ctx.beginPath();
     ctx.moveTo(0, endLineY);
     ctx.lineTo(COLS * BLOCK, endLineY);
@@ -753,10 +698,13 @@ function drawOpponent() {
 document.addEventListener("keydown", event => {
     if (!gameRunning) return;
 
-    if (
-        ["ArrowLeft", "ArrowRight", "ArrowDown", "ArrowUp", "Space"]
-            .includes(event.code)
-    ) {
+    if ([
+        "ArrowLeft",
+        "ArrowRight",
+        "ArrowDown",
+        "ArrowUp",
+        "Space"
+    ].includes(event.code)) {
         event.preventDefault();
     }
 
@@ -776,47 +724,161 @@ document.addEventListener("keydown", event => {
 });
 
 // =========================
-// СЕНСОРНІ КНОПКИ
+// СЕНСОРНЕ КЕРУВАННЯ ЖЕСТАМИ
 // =========================
 
-const touchControls = document.getElementById("touchControls");
+// Приховуємо старі сенсорні кнопки, якщо вони існують.
+const oldTouchControls = document.getElementById("touchControls");
 
-if (touchControls) {
-    const actions = {
-        left: moveLeft,
-        right: moveRight,
-        down: moveDown,
-        rotate: rotatePiece,
-        drop: hardDrop
+if (oldTouchControls) {
+    oldTouchControls.hidden = true;
+    oldTouchControls.style.display = "none";
+}
+
+if (canvas) {
+    canvas.style.touchAction = "none";
+    canvas.style.userSelect = "none";
+    canvas.style.webkitUserSelect = "none";
+
+    const SWIPE_START = 18;
+    const MOVE_STEP = 24;
+    const DOWN_STEP = 28;
+
+    let swipe = null;
+
+    canvas.addEventListener("contextmenu", event => {
+        event.preventDefault();
+    });
+
+    canvas.addEventListener("pointerdown", event => {
+        if (event.pointerType === "mouse" && event.button !== 0) {
+            return;
+        }
+
+        if (!gameRunning || paused || !currentPiece) {
+            return;
+        }
+
+        event.preventDefault();
+
+        swipe = {
+            pointerId: event.pointerId,
+            startX: event.clientX,
+            startY: event.clientY,
+            lastX: event.clientX,
+            lastY: event.clientY,
+            axis: null,
+            rotated: false
+        };
+
+        try {
+            canvas.setPointerCapture(event.pointerId);
+        } catch (_) {
+            // Захоплення вказівника може бути недоступним.
+        }
+    });
+
+    canvas.addEventListener("pointermove", event => {
+        if (!swipe || event.pointerId !== swipe.pointerId) {
+            return;
+        }
+
+        if (!gameRunning || paused) {
+            return;
+        }
+
+        event.preventDefault();
+
+        const totalX = event.clientX - swipe.startX;
+        const totalY = event.clientY - swipe.startY;
+
+        // Визначаємо напрямок жесту.
+        if (!swipe.axis) {
+            if (
+                Math.max(
+                    Math.abs(totalX),
+                    Math.abs(totalY)
+                ) < SWIPE_START
+            ) {
+                return;
+            }
+
+            swipe.axis =
+                Math.abs(totalX) > Math.abs(totalY)
+                    ? "x"
+                    : "y";
+        }
+
+        // Свайп ліворуч або праворуч.
+        if (swipe.axis === "x") {
+            let deltaX = event.clientX - swipe.lastX;
+
+            while (deltaX <= -MOVE_STEP) {
+                moveLeft();
+
+                swipe.lastX -= MOVE_STEP;
+                deltaX = event.clientX - swipe.lastX;
+            }
+
+            while (deltaX >= MOVE_STEP) {
+                moveRight();
+
+                swipe.lastX += MOVE_STEP;
+                deltaX = event.clientX - swipe.lastX;
+            }
+        } else {
+            const deltaY = event.clientY - swipe.lastY;
+
+            // Свайп угору — обертання.
+            if (
+                totalY < -SWIPE_START &&
+                !swipe.rotated
+            ) {
+                rotatePiece();
+
+                swipe.rotated = true;
+                swipe.lastY = event.clientY;
+            }
+
+            // Свайп униз — прискорене падіння.
+            else if (deltaY >= DOWN_STEP) {
+                const steps = Math.floor(deltaY / DOWN_STEP);
+
+                for (let i = 0; i < steps; i++) {
+                    moveDown();
+
+                    if (!gameRunning) break;
+                }
+
+                swipe.lastY += steps * DOWN_STEP;
+            }
+        }
+    }, { passive: false });
+
+    const finishSwipe = event => {
+        if (!swipe || event.pointerId !== swipe.pointerId) {
+            return;
+        }
+
+        // Короткий дотик не обертає фігуру.
+        // Для обертання потрібно провести пальцем угору.
+        swipe = null;
     };
 
-    touchControls.querySelectorAll("[data-action]").forEach(button => {
-        const action = button.dataset.action;
-        const runAction = actions[action];
+    canvas.addEventListener("pointerup", finishSwipe);
+    canvas.addEventListener("pointercancel", finishSwipe);
 
-        if (!runAction) return;
-
-        button.addEventListener("contextmenu", event => {
-            event.preventDefault();
-        });
-
-        button.addEventListener("pointerdown", event => {
-            event.preventDefault();
-
-            if (!gameRunning || paused) return;
-
-            runAction();
-        });
+    canvas.addEventListener("lostpointercapture", () => {
+        swipe = null;
     });
 }
 
 // =========================
-// ВІДПРАВКА СТАНУ НА СЕРВЕР
+// ВІДПРАВКА СТАНУ
 // =========================
 
 function sendGameState() {
-    // У соло roomCode порожній — нічого не відправляємо.
-    if (gameMode !== "multiplayer" || !roomCode) return;
+    if (!roomCode) return;
 
     socket.emit("game_state", {
         room: roomCode,
@@ -878,6 +940,7 @@ async function loadRecords() {
                     <td colspan="5">Рекордів ще немає</td>
                 </tr>
             `;
+
             return;
         }
 
@@ -906,11 +969,12 @@ async function loadRecords() {
 function escapeHtml(text) {
     const div = document.createElement("div");
     div.textContent = text;
+
     return div.innerHTML;
 }
 
 // =========================
-// ВІКНО ПРОГРАШУ
+// GAME OVER
 // =========================
 
 function showGameOver(title, text) {
@@ -927,16 +991,15 @@ function closeGameOver() {
 }
 
 // =========================
-// ПЕРЕЗАПУСК
+// РЕСТАРТ
 // =========================
 
 restartBtn.onclick = () => {
     closeGameOver();
 
     if (gameMode === "solo") {
-        roomCode = "";
         startGame();
-    } else if (roomCode) {
+    } else {
         socket.emit("restart_match", {
             room: roomCode
         });
@@ -944,8 +1007,6 @@ restartBtn.onclick = () => {
 };
 
 socket.on("match_restart", () => {
-    gameMode = "multiplayer";
-    setOpponentVisible(true);
     startGame();
 });
 
@@ -966,8 +1027,6 @@ leaveBtn.onclick = () => {
 // =========================
 
 socket.on("opponent_left", () => {
-    if (gameMode !== "multiplayer") return;
-
     gameRunning = false;
 
     showGameOver(
@@ -977,23 +1036,17 @@ socket.on("opponent_left", () => {
 });
 
 // =========================
-// ПІДКЛЮЧЕННЯ ДО СЕРВЕРА
+// ПІДКЛЮЧЕННЯ
 // =========================
 
 socket.on("connect", () => {
-    const status = document.getElementById("connectionStatus");
-
-    if (status) {
-        status.textContent = "🟢 Підключено";
-    }
+    document.getElementById("connectionStatus").textContent =
+        "🟢 Підключено";
 });
 
 socket.on("disconnect", () => {
-    const status = document.getElementById("connectionStatus");
-
-    if (status) {
-        status.textContent = "🔴 Немає з'єднання";
-    }
+    document.getElementById("connectionStatus").textContent =
+        "🔴 Немає з'єднання";
 });
 
 // =========================
@@ -1007,4 +1060,3 @@ opponentBoard = createBoard();
 
 draw();
 drawOpponent();
-

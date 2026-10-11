@@ -112,6 +112,9 @@ const pieces = [
 // DOM
 // =========================
 
+const soloBtn = document.getElementById("soloBtn");
+let gameMode = "multiplayer";
+
 const lobby =
     document.getElementById("lobby");
 
@@ -286,9 +289,6 @@ joinBtn.onclick = () => {
 
         return;
     }
-    
-const soloBtn = document.getElementById("soloBtn");
-let gameMode = "multiplayer";
 
 
 if (soloBtn) {
@@ -877,16 +877,15 @@ function clearLines() {
 // ГРАВЕЦЬ ПРОГРАВ
 // =========================
 
-function loseGame() {
 
+function loseGame() {
     gameRunning = false;
 
-    socket.emit(
-        "player_lost",
-        {
+    if (gameMode === "multiplayer" && roomCode) {
+        socket.emit("player_lost", {
             room: roomCode
-        }
-    );
+        });
+    }
 
     saveRecord();
 
@@ -895,7 +894,6 @@ function loseGame() {
         `Твій рахунок: ${score}`
     );
 }
-
 
 // =========================
 // ПЕРЕМОГА

@@ -749,41 +749,33 @@ function rotatePiece() {
 // ЗЛИТТЯ
 // =========================
 
+
 function merge() {
+    let blocksPlaced = 0;
 
-    currentPiece.shape.forEach(
-        (row, y) => {
+    currentPiece.shape.forEach((row, y) => {
+        row.forEach((value, x) => {
+            if (value) {
+                const boardY = currentPiece.y + y;
+                const boardX = currentPiece.x + x;
 
-            row.forEach(
-                (value, x) => {
-
-                    if (value) {
-
-                        const boardY =
-                            currentPiece.y + y;
-
-                        const boardX =
-                            currentPiece.x + x;
-
-                        if (
-                            boardY >= 0 &&
-                            boardY < ROWS &&
-                            boardX >= 0 &&
-                            boardX < COLS
-                        ) {
-
-                            board[boardY][boardX] =
-                                currentPiece.color;
-
-                        }
-
-                    }
-
+                if (
+                    boardY >= 0 &&
+                    boardY < ROWS &&
+                    boardX >= 0 &&
+                    boardX < COLS
+                ) {
+                    board[boardY][boardX] = currentPiece.color;
+                    blocksPlaced++;
                 }
-            );
+            }
+        });
+    });
 
-        }
-    );
+    // 10 очок за кожен блок
+    score += blocksPlaced * 10;
+
+    updateStats();
 }
 
 

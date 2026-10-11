@@ -1143,84 +1143,71 @@ function drawOpponent() {
 }
 
 
-// =========================
-// КЕРУВАННЯ
-// =========================
 
-document.addEventListener(
-    "keydown",
-    event => {
+ // =========================
+ // КЕРУВАННЯ
+ // =========================
 
-        if (!gameRunning) {
-            return;
-        }
+document.addEventListener("keydown", event => {
+    if (!gameRunning) return;
 
-        if (
-            event.code ===
-            "ArrowLeft"
-        ) {
-
-            event.preventDefault();
-
-            moveLeft();
-
-        }
-
-        else if (
-            event.code ===
-            "ArrowRight"
-        ) {
-
-            event.preventDefault();
-
-            moveRight();
-
-        }
-
-        else if (
-            event.code ===
-            "ArrowDown"
-        ) {
-
-            event.preventDefault();
-
-            moveDown();
-
-        }
-
-        else if (
-            event.code ===
-            "ArrowUp"
-        ) {
-
-            event.preventDefault();
-
-            rotatePiece();
-
-        }
-
-        else if (
-            event.code ===
-            "Space"
-        ) {
-
-            event.preventDefault();
-
-            hardDrop();
-
-        }
-
-        else if (
-            event.key.toLowerCase() ===
-            "p"
-        ) {
-
-            paused = !paused;
-
-        }
-
+    if ([
+        "ArrowLeft",
+        "ArrowRight",
+        "ArrowDown",
+        "ArrowUp",
+        "Space"
+    ].includes(event.code)) {
+        event.preventDefault();
     }
-);
+
+    if (event.code === "ArrowLeft") {
+        moveLeft();
+    } else if (event.code === "ArrowRight") {
+        moveRight();
+    } else if (event.code === "ArrowDown") {
+        moveDown();
+    } else if (event.code === "ArrowUp") {
+        rotatePiece();
+    } else if (event.code === "Space") {
+        hardDrop();
+    } else if (event.key.toLowerCase() === "p") {
+        paused = !paused;
+    }
+});
+
+// Сенсорні кнопки для телефона
+const touchControls = document.getElementById("touchControls");
+
+if (touchControls) {
+    const actions = {
+        left: moveLeft,
+        right: moveRight,
+        down: moveDown,
+        rotate: rotatePiece,
+        drop: hardDrop
+    };
+
+    touchControls.querySelectorAll("[data-action]").forEach(button => {
+        const action = button.dataset.action;
+        const runAction = actions[action];
+
+        if (!runAction) return;
+
+        // Запобігаємо подвійному спрацюванню на сенсорному екрані
+        button.addEventListener("contextmenu", event => {
+            event.preventDefault();
+        });
+
+        button.addEventListener("pointerdown", event => {
+            event.preventDefault();
+
+            if (!gameRunning || paused) return;
+
+            runAction();
+        });
+    });
+}
 
 
 // =========================

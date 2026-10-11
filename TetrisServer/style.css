@@ -591,3 +591,14 @@ td {
         height: 54px;
     }
 }
+
+
+/* Приховування суперника в соло-режимі */
+body.solo-mode .opponent-section {
+    display: none !important;
+}
+
+/* У соло поле гравця розташовується по центру */
+body.solo-mode .boards {
+    justify-content: center;
+}

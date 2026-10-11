@@ -112,9 +112,6 @@ const pieces = [
 // DOM
 // =========================
 
-const soloBtn = document.getElementById("soloBtn");
-let gameMode = "multiplayer";
-
 const lobby =
     document.getElementById("lobby");
 
@@ -132,6 +129,9 @@ const roomInput =
 
 const createBtn =
     document.getElementById("createBtn");
+
+const soloBtn = document.getElementById("soloBtn");
+let gameMode = "multiplayer";
 
 const joinBtn =
     document.getElementById("joinBtn");

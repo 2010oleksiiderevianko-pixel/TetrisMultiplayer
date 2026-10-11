@@ -457,3 +457,137 @@ td {
         margin-bottom: -50px;
     }
 }
+
+
+/* Сенсорне керування */
+.touch-controls {
+    display: none;
+    width: 100%;
+    max-width: 360px;
+    margin: 18px auto;
+    gap: 14px;
+    touch-action: none;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+.touch-movement,
+.touch-actions {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+}
+
+.control-btn {
+    width: 68px;
+    height: 62px;
+    margin: 0;
+    padding: 0;
+    border: 1px solid rgba(0, 255, 255, 0.55);
+    border-radius: 16px;
+    background: #111a35;
+    color: #00ffff;
+    font-size: 27px;
+    box-shadow: 0 0 12px rgba(0, 255, 255, 0.12);
+    touch-action: none;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.control-btn:active {
+    background: #00bfc7;
+    color: #06101c;
+    transform: scale(0.94);
+}
+
+.rotate-btn {
+    color: #00ffa2;
+    border-color: #00ffa2;
+}
+
+.drop-btn {
+    color: #ffcf5c;
+    border-color: #ffcf5c;
+}
+
+.touch-hint {
+    margin-top: 8px;
+    text-align: center;
+    font-size: 12px;
+    color: #8998bd;
+}
+
+@media (max-width: 700px) {
+    body {
+        padding: 12px 8px;
+    }
+
+    .touch-controls {
+        display: grid;
+    }
+
+    .keyboard-help {
+        font-size: 12px;
+    }
+
+    .boards {
+        gap: 12px;
+    }
+
+    .gameColumn {
+        max-width: 100%;
+        min-width: 0;
+    }
+
+    .boardWrapper {
+        padding: 3px;
+    }
+
+    canvas {
+        width: min(42vw, 220px);
+        height: auto;
+        aspect-ratio: 1 / 2;
+    }
+
+    .boards .boardWrapper {
+        transform: none;
+        margin-bottom: 0;
+    }
+
+    .stats {
+        gap: 4px;
+    }
+
+    .stats div {
+        min-width: 0;
+        flex: 1;
+        padding: 6px 3px;
+    }
+
+    .stats span {
+        font-size: 10px;
+    }
+
+    .gameColumn h2 {
+        font-size: 15px;
+    }
+
+    .control-btn {
+        width: min(19vw, 68px);
+        height: 58px;
+    }
+}
+
+@media (max-width: 380px) {
+    .boards {
+        gap: 6px;
+    }
+
+    .stats strong {
+        font-size: 13px;
+    }
+
+    .control-btn {
+        height: 54px;
+    }
+}

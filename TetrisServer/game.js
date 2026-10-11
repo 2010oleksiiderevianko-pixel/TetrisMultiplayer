@@ -307,36 +307,26 @@ joinBtn.onclick = () => {
     }
 
 
+
+const soloBtn = document.getElementById("soloBtn");
+
 if (soloBtn) {
-    soloBtn.addEventListener("click", () => {
+    soloBtn.onclick = function () {
         gameMode = "solo";
-        document.body.classList.add("solo-mode");
-
-const opponentCanvas = document.getElementById("opponentCanvas");
-
-if (opponentCanvas) {
-    let opponentColumn = opponentCanvas;
-
-    while (
-        opponentColumn.parentElement &&
-        !opponentColumn.classList.contains("gameColumn")
-    ) {
-        opponentColumn = opponentColumn.parentElement;
-    }
-
-    opponentColumn.style.display = "none";
-}
         roomCode = "";
 
         playerName = playerNameInput.value.trim() || "Гравець";
+
+        document.body.classList.add("solo-mode");
 
         lobby.classList.add("hidden");
         roomPanel.classList.add("hidden");
         gamePanel.classList.remove("hidden");
 
         startGame();
-    });
+    };
 }
+
 
 
 

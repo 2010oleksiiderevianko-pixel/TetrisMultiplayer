@@ -214,21 +214,28 @@
             </div>
 
 
-            <div class="controls">
-
-                <p>
-                    ← → Рух
-                    <br>
-                    ↑ Обертання
-                    <br>
-                    ↓ Прискорення
-                    <br>
-                    SPACE — падіння
-                    <br>
-                    P — пауза
-                </p>
-
+           
+        <div class="controls">
+            <p class="keyboard-help">
+                ПК: ← → рух · ↑ обертання · ↓ вниз · SPACE — падіння · P — пауза
+            </p>
+        
+            <div class="touch-controls" id="touchControls">
+                <div class="touch-movement">
+                    <button type="button" class="control-btn" data-action="left" aria-label="Ліворуч">◀</button>
+                    <button type="button" class="control-btn" data-action="down" aria-label="Вниз">▼</button>
+                    <button type="button" class="control-btn" data-action="right" aria-label="Праворуч">▶</button>
+                </div>
+        
+                <div class="touch-actions">
+                    <button type="button" class="control-btn rotate-btn" data-action="rotate" aria-label="Обертати">⟳</button>
+                    <button type="button" class="control-btn drop-btn" data-action="drop" aria-label="Миттєве падіння">⤓</button>
+                </div>
+        
+                <p class="touch-hint">Утримуй ◀ або ▶ для руху</p>
             </div>
+        </div>
+
 
         </section>
 

@@ -285,6 +285,10 @@ joinBtn.onclick = () => {
 
         return;
     }
+    
+const soloBtn = document.getElementById("soloBtn");
+let gameMode = "multiplayer";
+
 
     socket.emit(
         "join_room_game",

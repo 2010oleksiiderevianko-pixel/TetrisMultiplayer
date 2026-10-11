@@ -1115,14 +1115,24 @@ function drawPiece() {
 }
 
 
+
 function draw() {
-
-    drawBoard(
-        ctx,
-        board
-    );
-
+    drawBoard(ctx, board);
     drawPiece();
+
+    // Червона лінія межі програшу
+    const endLineY = 3 * BLOCK;
+
+    ctx.save();
+    ctx.beginPath();
+    ctx.moveTo(0, endLineY);
+    ctx.lineTo(COLS * BLOCK, endLineY);
+    ctx.strokeStyle = "#ff1744";
+    ctx.lineWidth = 3;
+    ctx.shadowColor = "#ff1744";
+    ctx.shadowBlur = 12;
+    ctx.stroke();
+    ctx.restore();
 }
 
 

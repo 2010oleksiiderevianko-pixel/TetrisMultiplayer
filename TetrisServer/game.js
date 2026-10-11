@@ -131,9 +131,11 @@ const createBtn =
     document.getElementById("createBtn");
 
 let gameMode = "multiplayer";
+document.body.classList.remove("solo-mode");
 
 const joinBtn =
     document.getElementById("joinBtn");
+
 const soloBtn = document.getElementById("soloBtn");
 
 const startBtn =

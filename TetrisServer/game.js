@@ -624,17 +624,19 @@ function moveDown() {
 
         clearLines();
 
-        currentPiece =
-            randomPiece();
+        
+    currentPiece = randomPiece();
+    
+    // Програш, якщо нова фігура не може з'явитися
+    // у верхніх трьох рядах поля
+    if (
+        collision(currentPiece) ||
+        board.slice(0, 3).some(row => row.some(cell => cell))
+    ) {
+        loseGame();
+        return;
+    }
 
-        if (
-            collision(currentPiece)
-        ) {
-
-            loseGame();
-
-            return;
-        }
 
         sendGameState();
 

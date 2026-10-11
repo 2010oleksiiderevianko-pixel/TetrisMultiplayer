@@ -277,6 +277,7 @@ socket.on("match_started", () => {
 // =========================
 
 function startGame() {
+    document.body.classList.add("playing");
     board = createBoard();
     opponentBoard = createBoard();
 

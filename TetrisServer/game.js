@@ -45,6 +45,7 @@ let lastTime = 0;
 
 let dropInterval = 800;
 
+let gameMode = "multiplayer";
 
 // =========================
 // ФІГУРИ
@@ -129,9 +130,6 @@ const roomInput =
 
 const createBtn =
     document.getElementById("createBtn");
-
-let gameMode = "multiplayer";
-document.body.classList.remove("solo-mode");
 
 const joinBtn =
     document.getElementById("joinBtn");
@@ -439,6 +437,7 @@ socket.on(
 if (soloBtn) {
     soloBtn.onclick = function () {
         gameMode = "solo";
+        document.body.classList.remove("solo-mode");
         roomCode = "";
         playerName = playerNameInput.value.trim() || "Гравець";
 

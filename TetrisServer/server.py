@@ -459,6 +459,15 @@ def disconnect():
 # =========================
 # ЗАПУСК
 # =========================
+@app.route("/robots.txt")
+def robots():
+    return send_from_directory(".", "robots.txt",
+                               mimetype="text/plain")
+
+@app.route("/sitemap.xml")
+def sitemap():
+    return send_from_directory(".", "sitemap.xml",
+                               mimetype="application/xml")
 
 if __name__ == "__main__":
 
